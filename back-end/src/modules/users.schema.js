@@ -18,7 +18,7 @@ const User = new mongoose.Schema({
     // check userEmail
     isVerified:{type:Boolean, default:false},
     verifyCode:String,
-    verifyExpires:{type:Date, default: () => Date.now() + 1 * 60 * 1000},
+    verifyExpires:{type:Date, default: () => Date.now() + 10 * 60 * 1000},
 
     // user profile
     profilePhoto:String,

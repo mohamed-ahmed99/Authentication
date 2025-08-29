@@ -21,7 +21,7 @@ export const register = async (req, res) => {
         const newUser = await Users.create({...req.body, verifyCode:verifyCode})
 
         await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+            from: process.env.EMAIL_FROM,
             to: req.body.email,
             subject:"Verify Your Account",
             html:`
