@@ -1,8 +1,8 @@
-import { body, validationResult } from "express-validator"
+import { body, checkSchema, validationResult } from "express-validator"
 
 
 /////////////////////////////  registerSchecma
-export const registerSchecma = {
+const registerSchecma = {
     firstName: body("firstName")
         .notEmpty().withMessage("username is rquired")
         .isString().withMessage("username must be string")
@@ -20,13 +20,14 @@ export const registerSchecma = {
         
     email: body("email")
         .notEmpty().withMessage("email is rquired")
-        .isEmail().withMessage("check your email")
+        .isEmail().withMessage("Invalid email")
         .isString().withMessage("email must be string"),
         
     password: body("password")
         .notEmpty().withMessage("password is rquired")
-        .isStrongPassword().withMessage("password must be stronger")
-        .isString().withMessage("password must be string"),
+        .isString().withMessage("password must be string")
+        .isStrongPassword({minLength: 8,minLowercase: 1,minUppercase: 1,minNumbers: 1,minSymbols: 1})
+        .withMessage("Password must be at least 8 chars, include 1 lowercase, 1 Uppercase, 1 number, 1 symbol"),
         
     phoneNumber: body("phoneNumber")
         .notEmpty().withMessage("phoneNumber is rquired")
@@ -45,8 +46,27 @@ export const registerSchecma = {
 
 
 
-export const registerValidator = () => {
-    const validators = Object.values(registerSchecma)
+///////////////////////// login 
+const loginSchema = {
+    email: body("email")
+        .notEmpty().withMessage("email is rquired")
+        .isEmail().withMessage("Invalid email")
+        .isString().withMessage("email must be string"),
+        
+    password: body("password")
+        .notEmpty().withMessage("password is rquired")
+        .isStrongPassword({minLength: 8,minLowercase: 1,minUppercase: 1,minNumbers: 1,minSymbols: 1})
+        .withMessage("Password must be at least 8 chars, include 1 lowercase, 1 Uppercase, 1 number, 1 symbol"),
+}
+
+
+
+
+
+
+
+const validator = (checkSchema) => {
+    const validators = Object.values(checkSchema)
 
     return async (req,res,next) => {
         await Promise.all(validators.map(v => v.run(req)))
@@ -55,24 +75,16 @@ export const registerValidator = () => {
         if(errors.length > 0) {
             let validatorErros = {}
             errors.forEach(e => validatorErros[e.path] = e.msg)
-            res.status(400).send({validatorErros:validatorErros})
+            return res.status(400).send({validatorErros:validatorErros})
         }
-
         next()
     }
 }
 
 
 
-
-///////////////////////// 
-
-
-
-
-
-
-
+export const registerValidator = validator(registerSchecma)
+export const logInValidator = validator(loginSchema)
 
 
 

@@ -71,7 +71,7 @@ export const verifyEmail = async (req,res) => {
             path:"/"
         })
 
-        return res.status(200).json({ message: "Email verified successfully" });
+        return res.status(200).json({ message: "Email verified successfully",token:token });
     }
 
     catch(error){
@@ -80,5 +80,31 @@ export const verifyEmail = async (req,res) => {
 }
 
 
+////// login
+export const login = async (req,res) => {
+    try{
+        const {email, password} = req.body
+        const user = await Users.findOne({email:email})
+        if(!user) return res.status(404).send({message:"user not found"}) // check if user is existing or not
 
+        // check password
+        if (!user.checkPassword(password)) return res.status(401).send({message:"incorrect password"}) 
+        
+        // token
+        const token = jwt.sign({_id:user._id, email:user.email}, process.env.JWT_SECRET)
+        user.tokens.unshift({token:token, date:Date.now()})
+        await user.save()
+
+        res.cookie("authXtoken", token, {
+            httpOnly:true,
+            secure:process.env.NODE_ENV === "production",
+            path:"/"
+        })
+        
+        return res.status(200).send({message:'successful login',token:token})
+    }
+    catch(error){
+        return res.status(500).send({message:String(error)})
+    }
+}
 
