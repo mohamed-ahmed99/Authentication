@@ -71,7 +71,7 @@ export const verifyEmail = async (req,res) => {
             path:"/"
         })
 
-        return res.status(200).json({ message: "Email verified successfully",token:token });
+        return res.status(200).json({ message: "Email verified successfully"});
     }
 
     catch(error){
@@ -101,7 +101,7 @@ export const login = async (req,res) => {
             path:"/"
         })
         
-        return res.status(200).send({message:'successful login',token:token})
+        return res.status(200).send({message:'successful login'})
     }
     catch(error){
         return res.status(500).send({message:String(error)})
