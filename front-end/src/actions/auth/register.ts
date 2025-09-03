@@ -73,8 +73,14 @@ export const register = async (_:any, formData:FormData) => {
             body:JSON.stringify(prevData)
         })
 
-        const data = await res.json()
-        
+        let data;
+            try {
+                data = await res.json();
+                } catch {
+                const text = await res.text(); // fallback لو مش JSON
+                data = { message: text };
+            }
+                    
         if (res.status == 400 && data.name == 'validator') return {errors:{...data}, goToVerifyCode:false, prevData}
         if (res.status == 400 && data.message) return {message:data.message, prevData, goToVerifyCode: false}
 
