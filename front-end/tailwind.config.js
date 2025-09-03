@@ -7,6 +7,12 @@ module.exports = {
       colors:{
 
       },
+      fontFamily:{
+        Merienda:['"Merienda"'],
+      },
+      screens: {
+        xs: '480px',
+      },
 
       container: {
         center:true,
@@ -17,6 +23,7 @@ module.exports = {
           xl: '5rem',
           '2xl': '6rem',
         },
+
     },
     },
   },
