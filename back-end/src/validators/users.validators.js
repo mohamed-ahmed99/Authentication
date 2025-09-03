@@ -26,22 +26,14 @@ const registerSchecma = {
     password: body("password")
         .notEmpty().withMessage("password is rquired")
         .isString().withMessage("password must be string")
-        .isStrongPassword({minLength: 8,minLowercase: 1,minUppercase: 1,minNumbers: 1,minSymbols: 1})
-        .withMessage("Password must be at least 8 chars, include 1 lowercase, 1 Uppercase, 1 number, 1 symbol"),
+        .isStrongPassword({minLength: 8,minLowercase: 1,minUppercase:0, minNumbers: 1,minSymbols: 1})
+        .withMessage("Password must be at least 8 chars, include 1 lowercase, 1 number, 1 symbol"),
         
     phoneNumber: body("phoneNumber")
         .notEmpty().withMessage("phoneNumber is rquired")
         .isMobilePhone().withMessage("this is not a phoneNumber")
         .isLength({min:10, max:15}).withMessage("phone number must be 10-15 numbers")
         .isString().withMessage("password must be string"),
-
-    profilePhoto: body("profilePhoto")
-        .optional()
-        .isString().withMessage("the link of photo must be string"),
-
-    backgroundPhoto: body("backgroundPhoto")
-        .optional()
-        .isString().withMessage("the link of photo must be string"),
 }
 
 
@@ -55,8 +47,7 @@ const loginSchema = {
         
     password: body("password")
         .notEmpty().withMessage("password is rquired")
-        .isStrongPassword({minLength: 8,minLowercase: 1,minUppercase: 1,minNumbers: 1,minSymbols: 1})
-        .withMessage("Password must be at least 8 chars, include 1 lowercase, 1 Uppercase, 1 number, 1 symbol"),
+        .isLength({min:8}).withMessage("Password must be at least 8"),
 }
 
 
@@ -75,7 +66,7 @@ const validator = (checkSchema) => {
         if(errors.length > 0) {
             let validatorErros = {}
             errors.forEach(e => validatorErros[e.path] = e.msg)
-            return res.status(400).send({validatorErros:validatorErros})
+            return res.status(400).json({validatorErros:validatorErros, name:'validator'})
         }
         next()
     }

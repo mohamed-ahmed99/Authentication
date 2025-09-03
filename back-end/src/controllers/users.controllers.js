@@ -38,7 +38,7 @@ export const register = async (req, res) => {
         res.status(201).json({ message: "User registered, check your email" });
     }
     catch(error){
-        return res.status(500).send({message:String(error)})
+        return res.status(500).json({message:String(error)})
     }
 }
 
@@ -48,10 +48,10 @@ export const verifyEmail = async (req,res) => {
 
     try{
         const {email, code} = req.body
-        if(!email, !code) return res.status(401).send({message:"email && code are required"})
+        if(!email, !code) return res.status(401).json({message:"email && code are required"})
 
         const user = await Users.findOne({email:email})
-        if(!user) return res.status(404).send({message:"NOT FOUND USER"})
+        if(!user) return res.status(404).json({message:"NOT FOUND USER"})
 
         if(user.verifyCode != code) return res.status(401).json({message:"Invalid verification code"})
         if(user.verifyExpires < Date.now()) return res.status(401).json({message:"Code expired, register again"})
@@ -75,7 +75,7 @@ export const verifyEmail = async (req,res) => {
     }
 
     catch(error){
-        return res.status(500).send({message:String(error)})
+        return res.status(500).json({message:String(error)})
     }   
 }
 
@@ -85,10 +85,10 @@ export const login = async (req,res) => {
     try{
         const {email, password} = req.body
         const user = await Users.findOne({email:email})
-        if(!user) return res.status(404).send({message:"user not found"}) // check if user is existing or not
+        if(!user) return res.status(404).json({message:"user not found"}) // check if user is existing or not
 
         // check password
-        if (!user.checkPassword(password)) return res.status(401).send({message:"incorrect password"}) 
+        if (!user.checkPassword(password)) return res.status(401).json({message:"incorrect password"}) 
         
         // token
         const token = jwt.sign({_id:user._id, email:user.email}, process.env.JWT_SECRET)
@@ -101,10 +101,10 @@ export const login = async (req,res) => {
             path:"/"
         })
         
-        return res.status(200).send({message:'successful login'})
+        return res.status(200).json({message:'successful login'})
     }
     catch(error){
-        return res.status(500).send({message:String(error)})
+        return res.status(500).json({message:String(error)})
     }
 }
 

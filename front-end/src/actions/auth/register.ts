@@ -1,4 +1,5 @@
 "use server"
+import { redirect } from "next/navigation"
 
 export const register = async (_:any, formData:FormData) => {
 
@@ -37,7 +38,7 @@ export const register = async (_:any, formData:FormData) => {
     else if(Number(age) <= 10) errors.age = "user must be +10"
     
     // phone numver
-    if(!phoneNumber) errors.phoneNumber = "Phone Number is required"
+    if(!phoneNumber) errors.phoneNumber = "Phone number is required"
     else if(! (/^(01[0-2,5][0-9]{8}|\+201[0-2,5][0-9]{8})$/.test(phoneNumber))) errors.phoneNumber = "Invalid phone number"
     
     // address
@@ -50,7 +51,6 @@ export const register = async (_:any, formData:FormData) => {
     
     else if(! (/[0-9]/.test(password))) errors.password = "password must contain a number"
     else if(! (/[^a-zA-Z0-9]/.test(password))) errors.password = "password must contain a special character"
-    
 
     // confirmPassword
     if(!confirmPassword) errors.confirmPassword = "confirm Password is required"
@@ -60,8 +60,32 @@ export const register = async (_:any, formData:FormData) => {
     const prevData = {email, firstName, lastName, password, age,phoneNumber, address, confirmPassword}
     if(Object.keys(errors).length > 0) {
         console.log(errors)
-        return {errors, goToProfile:false, prevData}
+        return {errors, goToVerifyCode:false, prevData}
     }
 
 
+
+
+    try{
+        const res = await fetch("https://authentication-back-end-two.vercel.app/api/auth/register",{
+            method:"POST",
+            headers: { "Content-Type": "application/json" },
+            body:JSON.stringify(prevData)
+        })
+
+        const data = await res.json()
+        
+        if (res.status == 400 && data.name == 'validator') return {errors:{...data}, goToVerifyCode:false, prevData}
+        if (res.status == 400 && data.message) return {message:data.message, prevData, goToVerifyCode: false}
+
+        if (res.status == 201) return {goToVerifyCode: true}
+    }
+    catch(error){
+        console.log(error)
+        return { error: String(error), goToVerifyCode: false }
+    }
 }
+
+
+
+    
