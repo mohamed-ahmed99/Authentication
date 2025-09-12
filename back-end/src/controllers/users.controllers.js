@@ -51,7 +51,7 @@ export const verifyEmail = async (req,res) => {
         if(!email, !code) return res.status(401).json({message:"email && code are required"})
 
         const user = await Users.findOne({email:email})
-        if(!user) return res.status(404).json({message:"NOT FOUND USER"})
+        if(!user) return res.status(404).json({message:"USER NOT FOUND"})
 
         if(user.verifyCode != code) return res.status(401).json({message:"Invalid verification code"})
         if(user.verifyExpires < Date.now()) return res.status(401).json({message:"Code expired, register again"})

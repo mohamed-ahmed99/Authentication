@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import Alert from '../../../components/Alert'
 import LabelInput from "../../../components/LabelInput"
 import { register } from "../../../actions/auth/register"
+import {useAppContext} from '../../appContext'
 
 
 
@@ -12,12 +13,16 @@ import { register } from "../../../actions/auth/register"
 export default function LogIn () {
 
     const router = useRouter()
+    const {store, setStore} = useAppContext()
 
     const [state, action, isPending] = useActionState(register, undefined)
     console.log(state)
 
     useEffect(() => {
-        if(state?.goToVerifyCode)  return router.push('/verify-code')
+        if(state?.goToVerifyCode)  {
+            setStore("unVerifiedEmail", state.email)
+            return router.push('/verify-code')
+        }
         if(state?.message)  window.scrollTo({top:0, behavior:"smooth"})
     }, [state])
 

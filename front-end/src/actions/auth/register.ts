@@ -59,7 +59,6 @@ export const register = async (_:any, formData:FormData) => {
 
     const prevData = {email, firstName, lastName, password, age,phoneNumber, address, confirmPassword}
     if(Object.keys(errors).length > 0) {
-        console.log(errors)
         return {errors, goToVerifyCode:false, prevData}
     }
 
@@ -76,7 +75,7 @@ export const register = async (_:any, formData:FormData) => {
         let data;
             try {
                 data = await res.json();
-                } catch {
+            } catch {
                 const text = await res.text(); // fallback لو مش JSON
                 data = { message: text };
             }
@@ -84,10 +83,9 @@ export const register = async (_:any, formData:FormData) => {
         if (res.status == 400 && data.name == 'validator') return {errors:{...data}, goToVerifyCode:false, prevData}
         if (res.status == 400 && data.message) return {message:data.message, prevData, goToVerifyCode: false}
 
-        if (res.status == 201) return {goToVerifyCode: true}
+        if (res.status == 201) return {goToVerifyCode: true,email}
     }
     catch(error){
-        console.log(error)
         return { error: String(error), goToVerifyCode: false }
     }
 }
