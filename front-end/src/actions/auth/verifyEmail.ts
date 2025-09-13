@@ -1,28 +1,21 @@
 "use server"
-interface errorsOBJ{ [key:string] : string }
+
     
 
 export const verifyEmail = async (_:any, formData:FormData) => {
 
-    let errors:errorsOBJ = {} // object of errors
+    let errors:any = {} // object of errors
 
-    const email = (formData.get("email") as string).trim()
-    const password = (formData.get("password") as string).trim()
-
+    const code = (formData.get('code') as string).trim()
 
 
-    /////////////////// check data befor call back-end
-
-    // check email
-    if(!email) errors.email = "email is required"
-    else if(! (/^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email))) errors.email = "invalid gmail"
-    
-    // check password
-    if(!password) errors.password = "password is required"
-    else if(password.length < 6) errors.password = "short password"
+    // check code
+    if(!code) errors.code = "code is required"
+    if(code && code.length < 6) errors.code = "code must be 6 numbers"
+   
 
     // go back with errors
-    const prevData = {email, password}
+    const prevData = {code}
     if(Object.keys(errors).length > 0) return {errors, goToprofile:false, prevData}
 
     
