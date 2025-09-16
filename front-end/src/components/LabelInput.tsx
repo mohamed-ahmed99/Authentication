@@ -22,7 +22,7 @@ export default function LabelInput({label, type, placeholder, defaultValue, erro
             {/* input */}
             <input type={type} name={label} placeholder={placeholder} defaultValue={defaultValue} 
                 className="outline-none border border-gray-400 w-full py-[10px] px-4 rounded-lg"/>
-            {error && <motion.p initial={{x:50}} animate={{x:0}} transition={{type:"spring", stiffness:500}}
+            {error && <motion.p initial={{x:-50}} animate={{x:0}} transition={{type:"spring", stiffness:500}}
                 className="text-red-600 text-sm">{handleError}</motion.p>}
         </label>
     )

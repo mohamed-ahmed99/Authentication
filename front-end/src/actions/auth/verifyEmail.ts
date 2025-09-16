@@ -19,5 +19,6 @@ export const verifyEmail = async (_:any, formData:FormData) => {
     if(Object.keys(errors).length > 0) return {errors, goToprofile:false, prevData}
 
     
+    
 
 }
