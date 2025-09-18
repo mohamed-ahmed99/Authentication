@@ -3,13 +3,15 @@ import { useActionState, useEffect, useRef, useState } from "react"
 import { verifyEmail } from "../../../actions/auth/verifyEmail"
 import { useAppContext } from "../../appContext"
 import {motion} from 'framer-motion'
-
+import Alert from '../../../components/Alert'
+import { useRouter } from "next/navigation"
 
 
 
 export default function VerifyCode() {
 
     const {store} = useAppContext()
+    const router = useRouter()
     const [state, action, isPending] = useActionState(verifyEmail, undefined)
 
 
@@ -33,11 +35,19 @@ export default function VerifyCode() {
         }
     }
 
+    useEffect(() => {
+        if(state?.goToProfile) router.push('/profile')
+        
+    },[state])
+
 
 
     
   return (
     <div className="p-4 min-h-screen bg-gray-100 flex items-center justify-center overflow-hidden">
+
+      {state?.message && <Alert message={state.message}/>}
+
       <div className="p-6 bg-white w-full max-w-[700px] rounded-xl space-y-8">
         <h2 className="text-center text-4xl capitalize font-Merienda">verify email</h2>
 
@@ -58,6 +68,7 @@ export default function VerifyCode() {
 
             {/* becouse use action state used with name */}
             <input type="hidden" value={code.join("")} name="code"/>
+            <input type="hidden" value={store.unVerifiedEmail} name="email"/>
 
 
             {state?.errors?.code && 

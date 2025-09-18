@@ -76,7 +76,7 @@ export const register = async (_:any, formData:FormData) => {
             try {
                 data = await res.json();
             } catch {
-                const text = await res.text(); // fallback لو مش JSON
+                const text = await res.text(); 
                 data = { message: text };
             }
                     

@@ -16,7 +16,7 @@ export const register = async (req, res) => {
         if(isFound) return res.status(400).json({message:"this email is connicting with another account"})
 
         req.body.password = await bcrypt.hash(req.body.password, 10) // hash password
-        const verifyCode = Math.floor(10000 + Math.random() * 90000).toString()
+        const verifyCode = Math.floor(100000 + Math.random() * 900000).toString()
 
         const newUser = await Users.create({...req.body, verifyCode:verifyCode})
 
@@ -48,7 +48,7 @@ export const verifyEmail = async (req,res) => {
 
     try{
         const {email, code} = req.body
-        if(!email, !code) return res.status(401).json({message:"email && code are required"})
+        if(!email, !code) return res.status(401).json({message:"code is required"})
 
         const user = await Users.findOne({email:email})
         if(!user) return res.status(404).json({message:"USER NOT FOUND"})
@@ -68,7 +68,8 @@ export const verifyEmail = async (req,res) => {
         res.cookie("authXtoken", token, {
             httpOnly:true,
             secure:process.env.NODE_ENV === "production",
-            path:"/"
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            path:"/",
         })
 
         return res.status(200).json({ message: "Email verified successfully"});

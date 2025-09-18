@@ -57,7 +57,7 @@ ConnectDB()
 
 
 app.get("/", (req, res) => {
-  res.send("API is running...");
+  res.send("Server is running...");
 });
 app.listen(PORT, () => console.log(`server is running`))
 // export default app

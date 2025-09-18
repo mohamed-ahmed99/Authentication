@@ -21,7 +21,7 @@ export default function LogIn () {
     useEffect(() => {
         if(state?.goToVerifyCode)  {
             setStore("unVerifiedEmail", state.email)
-            return router.push('/verify-code')
+            return router.push('/verify-email')
         }
         if(state?.message)  window.scrollTo({top:0, behavior:"smooth"})
     }, [state])
