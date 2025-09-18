@@ -10,9 +10,12 @@ export default function login(){
     const router = useRouter()
     const [state, action, isPending] = useActionState(Login, undefined)
 
+
     useEffect(() => {
-        if(state?.goToVerifyCode)  return router.push('/verify-email')
-    }, [state])    
+            if(state?.goToProfile)   return router.push('/verify-email')
+    }, [state])
+    
+   
 
 
     return (
