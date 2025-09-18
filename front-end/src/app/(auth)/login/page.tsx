@@ -1,5 +1,5 @@
 "use client"
-import { useActionState, useEffect, useState } from "react"
+import { useActionState, useEffect } from "react"
 import LabelInput from "../../../components/LabelInput"
 import {Login} from '../../../actions/auth/login'
 import Alert from "../../../components/Alert"
@@ -10,11 +10,12 @@ export default function login(){
     const router = useRouter()
     const [state, action, isPending] = useActionState(Login, undefined)
 
-
-    useEffect(() => {
-            if(state?.goToProfile)   return router.push('/verify-email')
+     useEffect(() => {
+        if(state?.goToVerifyCode)  {
+            return router.push('/profile')
+        }
+        if(state?.message)  window.scrollTo({top:0, behavior:"smooth"})
     }, [state])
-    
    
 
 
