@@ -48,7 +48,7 @@ export const verifyEmail = async (req,res) => {
 
     try{
         const {email, code} = req.body
-        if(!email, !code) return res.status(401).json({message:"code is required"})
+        if(!email || !code) return res.status(401).json({message:"code is required"})
 
         const user = await Users.findOne({email:email})
         if(!user) return res.status(404).json({message:"USER NOT FOUND"})
@@ -59,8 +59,8 @@ export const verifyEmail = async (req,res) => {
         const token = jwt.sign({_id:user._id, email:user.email}, process.env.JWT_SECRET)
         
         user.isVerified = true
-        user.verifyCode = undefined
-        user.verifyExpires = undefined
+        user.verifyCode = null
+        user.verifyExpires = null
         user.tokens.unshift({token:token, date:Date.now()})
         await user.save()
 
@@ -88,8 +88,11 @@ export const login = async (req,res) => {
         const user = await Users.findOne({email:email})
         if(!user) return res.status(404).json({message:"user not found"}) // check if user is existing or not
 
+        console.log(password)
         // check password
-        if (!user.checkPassword(password)) return res.status(401).json({message:"incorrect password"}) 
+
+        if (!(await bcrypt.compare(password, user.password))) 
+                return res.status(401).json({ message: "incorrect password" });
         
         // token
         const token = jwt.sign({_id:user._id, email:user.email}, process.env.JWT_SECRET)

@@ -8,16 +8,11 @@ import usersRouter from "./routes/users.routes.js";
 
 // app.use
 const app = express()
-app.use(express.json())
-app.use(cookieParser())
-
-
 
 // .env
 dotenv.config() // load .env file
 const PORT = process.env.PORT // Port
 const DB_URI = process.env.DB_URI // DB URI
-
 
 
 //////// cors
@@ -31,6 +26,12 @@ app.use(cors({
     methods:["GET", "POST", "PUT", "DELETE", 'PATCH'],
     credentials:true
 }))
+
+
+
+app.use(express.json())
+app.use(cookieParser())
+
 
 
 
@@ -59,5 +60,5 @@ ConnectDB()
 app.get("/", (req, res) => {
   res.send("Server is running....");
 });
-// app.listen(PORT, () => console.log(`server is running`))
-export default app
+app.listen(PORT, () => console.log(`server is running`))
+// export default app

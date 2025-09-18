@@ -1,6 +1,5 @@
 "use server"
 
-
 export const verifyEmail = async (_:any, formData:FormData) => {
 
     let errors:any = {} // object of errors
